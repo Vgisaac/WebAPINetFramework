@@ -172,34 +172,16 @@ La aplicación queda disponible normalmente en `http://localhost:5173`. El clien
 
 ## Endpoints principales
 
-| Método | Endpoint | Autenticación | Descripción |
-| --- | --- | --- | --- |
-| `POST` | `/api/Acceso/Registrarse` | Pública | Registra al usuario y envía el correo de confirmación. |
-| `GET` | `/api/Acceso/ConfirmarCorreo?token=...` | Pública | Verifica la cuenta asociada al token. |
-| `POST` | `/api/Acceso/Login` | Pública | Valida las credenciales y devuelve un JWT. |
-| `GET` | `/api/Producto/Lista` | JWT | Devuelve todos los productos. |
-| `GET` | `/api/TodoItem/Items` | JWT | Devuelve todas las tareas. |
+| Método | Endpoint                                | Autenticación | Descripción                                            |
+| ------ | --------------------------------------- | ------------- | ------------------------------------------------------ |
+| `POST` | `/api/Acceso/Registrarse`               | Pública       | Registra al usuario y envía el correo de confirmación. |
+| `GET`  | `/api/Acceso/ConfirmarCorreo?token=...` | Pública       | Verifica la cuenta asociada al token.                  |
+| `POST` | `/api/Acceso/Login`                     | Pública       | Valida las credenciales y devuelve un JWT.             |
+| `GET`  | `/api/Producto/Lista`                   | JWT           | Devuelve todos los productos.                          |
+| `GET`  | `/api/TodoItem/Items`                   | JWT           | Devuelve todas las tareas.                             |
 
 Para los endpoints protegidos se debe enviar el token en el encabezado:
 
 ```http
 Authorization: Bearer <token>
 ```
-
-## Estado actual y mejoras recomendadas
-
-El backend compila correctamente con .NET 8. La compilación de producción del frontend tiene actualmente errores de TypeScript en `src/components/Footer.tsx`: la API de los subcomponentes `Footer.*` utilizada por el código no coincide con la versión instalada de Flowbite React. Es necesario actualizar ese componente o fijar una versión compatible de la dependencia.
-
-El proyecto ya demuestra la integración completa entre interfaz, API, autenticación, correo y base de datos. Antes de considerarlo listo para producción conviene:
-
-- Sustituir SHA-256 por un algoritmo específico para contraseñas, como Argon2, bcrypt o PBKDF2, con salt único por usuario.
-- Restringir la política CORS al origen real del frontend.
-- Mover las URLs actualmente fijas (`localhost:5035` y `localhost:5173`) a configuración por ambiente.
-- Agregar expiración al token de confirmación de correo.
-- Incorporar operaciones CRUD, paginación y filtros para productos y tareas si esos módulos van a crecer.
-- Añadir pruebas automatizadas para los flujos de registro, confirmación, login y autorización.
-- Revisar que las versiones mayores de Entity Framework Core y el framework de destino estén alineadas.
-
-## Licencia
-
-Este repositorio no incluye actualmente un archivo de licencia.
