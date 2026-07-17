@@ -1,0 +1,6 @@
+@WebApiSigin_HostAddress = http://localhost:5035
+
+GET {{WebApiSigin_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
