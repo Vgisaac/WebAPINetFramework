@@ -1,13 +1,15 @@
 import { createBrowserRouter } from "react-router-dom"
 import { Layout } from "../layout"
-import Register from "../pages/Register"
-import Login from "../pages/Login"
-import ErrorPage from "../pages/ErrorPage"
+import Register from "../pages/auth/Register"
+import Login from "../pages/auth/Login"
+import ErrorPage from "../pages/errors/ErrorPage"
 import HomePage from "../pages/HomePage";
-import Product from "../pages/Product";
+import Product from "../pages/products/Product";
+import CreateProducto from "../pages/products/CreateProducto";
+import UpdateProducto from "../pages/products/UpdateProducto";
 import ProtectedRoute from "./ProtectedRoute";
-import ConfirmationEmail from "../pages/ConfirmationEmail"
-import Tarea from "../pages/Task"
+import ConfirmationEmail from "../pages/auth/ConfirmationEmail"
+import Tarea from "../pages/tasks/Task"
 
 
 export const Router = createBrowserRouter([
@@ -32,6 +34,22 @@ export const Router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Product />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/productos/crear",
+                element: (
+                    <ProtectedRoute allowedRoles={["Admin"]}>
+                        <CreateProducto />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/productos/actualizar/:idProducto",
+                element: (
+                    <ProtectedRoute allowedRoles={["Admin"]}>
+                        <UpdateProducto />
                     </ProtectedRoute>
                 )
             },

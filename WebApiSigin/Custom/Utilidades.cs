@@ -42,7 +42,7 @@ namespace WebApiSigin.Custom
             {
                 new Claim(ClaimTypes.NameIdentifier, modelo.IdUsusario.ToString()),
                 new Claim(ClaimTypes.Email, modelo.Correo!),
-                new Claim(ClaimTypes.Role, modelo.Rol ?? "Empleado")
+                new Claim(ClaimTypes.Role, modelo.RolNavigation!.NombreRol)
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));

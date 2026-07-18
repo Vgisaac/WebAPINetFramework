@@ -46,6 +46,18 @@ namespace WebApiSigin.Controllers
             if (existeCorreo)
                 return BadRequest(new { isSuccess = false, mensaje = "El correo ya está registrado" });
 
+            var rolEmpleado = await _dbTodoListContext.Roles
+                .SingleOrDefaultAsync(r => r.NombreRol == "Empleado");
+
+            if (rolEmpleado == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    isSuccess = false,
+                    mensaje = "No existe el rol Empleado en la base de datos"
+                });
+            }
+
             // generar token único
             //var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
@@ -54,14 +66,14 @@ namespace WebApiSigin.Controllers
                 .Replace("/", "_")
                 .TrimEnd('=');
 
-            // se llam el modelo para guardar los datos en la BD
+            // se llama el modelo para guardar los datos en la BD
             var modeloUsuario = new Usuario
             {
                 Nombre = objeto.Nombre,
                 Apellido = objeto.Apellido,
                 Correo = objeto.Correo,
                 Clave = _utilidades.encriptarSHA256(objeto.Clave!),
-                Rol = "Empleado",
+                IdRol = rolEmpleado.IdRol,
                 IsVerified = false,
                 VerificationToken = token
             };
@@ -158,6 +170,7 @@ namespace WebApiSigin.Controllers
 
             // consulta los datos en la BD
             var usuarioEncontrado = await _dbTodoListContext.Usuarios
+                                       .Include(u => u.RolNavigation)
                                        .Where(u =>
                                         u.Correo == objeto.Correo &&
                                         u.Clave == _utilidades.encriptarSHA256(objeto.Clave)
@@ -172,6 +185,15 @@ namespace WebApiSigin.Controllers
                 {
                     isSuccess = false,
                     mensaje = "Debes verificar tu correo antes de iniciar sesión"
+                });
+            }
+
+            if (usuarioEncontrado.RolNavigation == null)
+            {
+                return Unauthorized(new
+                {
+                    isSuccess = false,
+                    mensaje = "El usuario no tiene un rol válido asignado"
                 });
             }
             // genera el token he inicia sesión

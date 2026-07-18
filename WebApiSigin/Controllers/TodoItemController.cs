@@ -22,6 +22,7 @@ namespace WebApiSigin.Controllers
 
         [HttpGet]
         [Route("Items")]
+        [Authorize(Roles = "Admin,Empleado")]
         public async Task<IActionResult> TodoItems()
         {
             var todoItem = await _dbTodoListContext.TodoItems.ToListAsync();

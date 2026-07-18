@@ -5,6 +5,7 @@ export interface User {
 	apellido: string;
 	correo: string;
 	token?: string;
+	rol?: string;
 	clave?: string;
 }
 

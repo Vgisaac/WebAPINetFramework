@@ -4,3 +4,7 @@ obj/
 *.user
 *.suo
 packages/
+
+# Configuración local y secretos
+WebApiSigin/appsettings.json
+WebApiSigin/appsettings.Development.json

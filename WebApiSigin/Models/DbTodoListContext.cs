@@ -17,6 +17,8 @@ public partial class DbTodoListContext : DbContext
 
     public virtual DbSet<Producto> Productos { get; set; }
 
+    public virtual DbSet<Rol> Roles { get; set; }
+
     public virtual DbSet<TodoItem> TodoItems { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
@@ -39,6 +41,17 @@ public partial class DbTodoListContext : DbContext
             entity.Property(e => e.Precio).HasColumnType("decimal(10, 2)");
         });
 
+        modelBuilder.Entity<Rol>(entity =>
+        {
+            entity.HasKey(e => e.IdRol);
+
+            entity.ToTable("Rol");
+
+            entity.HasIndex(e => e.NombreRol).IsUnique();
+
+            entity.Property(e => e.NombreRol).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<Usuario>(entity =>
         {
             entity.HasKey(e => e.IdUsusario).HasName("PK__Usuario__779765059434CED3");
@@ -57,6 +70,12 @@ public partial class DbTodoListContext : DbContext
             entity.Property(e => e.Apellido)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+
+            entity.HasOne(e => e.RolNavigation)
+                .WithMany(e => e.Usuarios)
+                .HasForeignKey(e => e.IdRol)
+                .IsRequired()
+                .HasConstraintName("FK_Usuario_Rol");
         });
 
         OnModelCreatingPartial(modelBuilder);
